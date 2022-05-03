@@ -3,15 +3,17 @@ package sbtdynver
 import java.io.File
 import java.util.Date
 
-class DynVerPlugin(val baseDirectory: File) {
-  /* The prefix to use when matching the version tag */
-  lazy val dynverTagPrefix: Option[String] = None
-  /* The separator to use between tag and distance, and the hash and dirty timestamp */
-  lazy val dynverSeparator: String = DynVer.separator
-  /* The current date, for dynver purposes */
-  lazy val dynverCurrentDate: Date = new Date
-  /* Whether to append -SNAPSHOT to snapshot versions */
-  lazy val dynverSonatypeSnapshots: Boolean = false
+class DynVerPlugin(
+    val baseDirectory: File,
+    /* The prefix to use when matching the version tag */
+    val dynverTagPrefix: Option[String] = None,
+    /* The separator to use between tag and distance, and the hash and dirty timestamp */
+    val dynverSeparator: String = DynVer.separator,
+    /* The current date, for dynver purposes */
+    val dynverCurrentDate: Date = new Date,
+    /* Whether to append -SNAPSHOT to snapshot versions */
+    val dynverSonatypeSnapshots: Boolean = false
+) {
 
   lazy val tagPrefix = {
     val vTagPrefix = dynverVTagPrefix
