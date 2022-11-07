@@ -170,7 +170,7 @@ sealed case class DynVer(wd: Option[File], separator: String, tagPrefix: String)
       .map(_.replaceAll("-([0-9]+)-g([0-9a-f]{8})", "+$1-$2"))
       .map(parser.parse)
       .flatMap { out =>
-        if (out.hasNoTags)
+        if (out.hasNoTags())
           getDistanceToFirstCommit().map { distance =>
             GitDescribeOutput(GitRef("0.0.0"), GitCommitSuffix(distance, out.ref.value), out.dirtySuffix)
           }
