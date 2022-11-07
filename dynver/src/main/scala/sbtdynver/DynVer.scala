@@ -1,13 +1,10 @@
-package sbtdynver
+package bleep.plugin.dynver
 
 import java.io.File
-import java.util._, regex.Pattern
-
-import scala.util._
-
+import java.util._
+import java.util.regex.Pattern
 import scala.sys.process.Process
-
-import dynver._, impl.NoProcessLogger
+import scala.util._
 
 sealed case class GitRef(value: String)
 final case class GitCommitSuffix(distance: Int, sha: String)
@@ -84,7 +81,7 @@ object GitDescribeOutput extends ((GitRef, GitCommitSuffix, GitDirtySuffix) => G
   private val CommitSuffix = s"""(?:$Distance-$Sha)""".r
   private val TstampSuffix = """(\+[0-9]{8}-[0-9]{4})""".r
 
-  private[sbtdynver] final class Parser(tagPrefix: String) {
+  private[dynver] final class Parser(tagPrefix: String) {
     private val tagBody = tagPrefix match {
       case "" => """([0-9]+\.[^+]*?)""" // Use a dot to distinguish tags for SHAs...
       case _  => """([0-9]+[^+]*?)""" // ... but not when there's a prefix (e.g. v2 is a tag)
@@ -95,7 +92,7 @@ object GitDescribeOutput extends ((GitRef, GitCommitSuffix, GitDirtySuffix) => G
     private val FromSha = s"""^$OptWs$Sha$TstampSuffix?$OptWs$$""".r
     private val FromHead = s"""^$OptWs$HEAD$TstampSuffix$OptWs$$""".r
 
-    private[sbtdynver] def parse: PartialFunction[String, GitDescribeOutput] = {
+    private[dynver] def parse: PartialFunction[String, GitDescribeOutput] = {
       case FromTag(tag, null, null, dirty) => mk(mkTag(tag), GitCommitSuffix(0, ""), GitDirtySuffix(if (dirty == null) "" else dirty))
       case FromTag(tag, dist, sha, dirty)  => mk(mkTag(tag), GitCommitSuffix(dist.toInt, sha), GitDirtySuffix(if (dirty == null) "" else dirty))
       case FromSha(sha, dirty)             => mk(GitRef(sha), GitCommitSuffix(0, ""), GitDirtySuffix(if (dirty == null) "" else dirty))
@@ -135,8 +132,8 @@ object GitDescribeOutput extends ((GitRef, GitCommitSuffix, GitDirtySuffix) => G
         )
   }
 
-  private[sbtdynver] def timestamp(d: Date): String = f"$d%tY$d%tm$d%td-$d%tH$d%tM"
-  private[sbtdynver] def fallback(separator: String, d: Date) = s"HEAD$separator${timestamp(d)}"
+  private[dynver] def timestamp(d: Date): String = f"$d%tY$d%tm$d%td-$d%tH$d%tM"
+  private[dynver] def fallback(separator: String, d: Date) = s"HEAD$separator${timestamp(d)}"
 }
 
 sealed case class DynVer(wd: Option[File], separator: String, tagPrefix: String) {
@@ -147,7 +144,7 @@ sealed case class DynVer(wd: Option[File], separator: String, tagPrefix: String)
   def vTagPrefix = tagPrefix == "v"
 
   private val TagPattern = s"$tagPrefix[0-9]*" // used by `git describe` to filter the tags
-  private[sbtdynver] val parser = new GitDescribeOutput.Parser(tagPrefix) // .. then parsed back
+  private[dynver] val parser = new GitDescribeOutput.Parser(tagPrefix) // .. then parsed back
 
   def version(d: Date): String = getGitDescribeOutput(d).versionWithSep(d, separator)
   def sonatypeVersion(d: Date): String = getGitDescribeOutput(d).sonatypeVersionWithSep(d, separator)

@@ -1,4 +1,4 @@
-package sbtdynver
+package bleep.plugin.dynver
 
 import java.io.File
 import java.util.Date

@@ -1,5 +1,4 @@
-package dynver
-package impl
+package bleep.plugin.dynver
 
 import scala.sys.process.ProcessLogger
 
