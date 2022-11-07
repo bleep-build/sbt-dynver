@@ -194,13 +194,9 @@ sealed case class DynVer(wd: Option[File], separator: String, tagPrefix: String)
   private def execAndHandleEmptyOutput(cmd: String): Option[String] =
     Try(Process(cmd, wd) !! NoProcessLogger).toOption
       .filter(_.trim.nonEmpty)
-
-  def copy(wd: Option[File] = wd): DynVer = new DynVer(wd, separator, tagPrefix)
 }
 
 object DynVer extends DynVer(None) with (Option[File] => DynVer) {
   override def apply(wd: Option[File]) = new DynVer(wd)
   def apply(wd: Option[File], separator: String, vTagPrefix: Boolean) = new DynVer(wd, separator, vTagPrefix)
 }
-
-object `package`
