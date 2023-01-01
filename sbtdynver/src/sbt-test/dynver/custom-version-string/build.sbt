@@ -55,7 +55,7 @@ TaskKey[Unit]("gitTag")    := {
 
 TaskKey[Unit]("dirty") := {
   import java.nio.file._, StandardOpenOption._
-  import scala.collection.JavaConverters._
+  import scala.jdk.CollectionConverters._
   Files.write(baseDirectory.value.toPath.resolve("f.txt"), Seq("1").asJava, CREATE, APPEND)
 }
 

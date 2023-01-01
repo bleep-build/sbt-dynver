@@ -6,7 +6,7 @@ import java.util._
 
 import org.eclipse.jgit.api.MergeCommand.FastForwardMode
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.eclipse.jgit.api._
 import org.eclipse.jgit.merge.MergeStrategy
 
