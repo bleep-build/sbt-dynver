@@ -1,10 +1,10 @@
 package bleep.plugin.dynver
 
 import java.io.File
-import java.util._
+import java.util.*
 import java.util.regex.Pattern
 import scala.sys.process.Process
-import scala.util._
+import scala.util.*
 
 sealed case class GitRef(value: String)
 final case class GitCommitSuffix(distance: Int, sha: String)
